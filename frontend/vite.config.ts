@@ -10,7 +10,15 @@ export default defineConfig({
     host: "0.0.0.0",
     proxy: {
       "/api": {
-        target: "http://backend:8000",
+        target: "http://localhost:8000",
+        changeOrigin: true,
+      },
+      "/docs": {
+        target: "http://localhost:8000",
+        changeOrigin: true,
+      },
+      "/openapi.json": {
+        target: "http://localhost:8000",
         changeOrigin: true,
       },
     },
