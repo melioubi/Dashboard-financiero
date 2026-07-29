@@ -90,7 +90,7 @@ This directory contains the frontend specification documents for the Financial D
 ### Edge Cases
 
 1. **One business type has fewer than 5 categories:** If B2B has only 2 income categories (e.g. "sales" and "others") while B2C has 2, the table shows only the available categories. The UI should not pad with empty rows. The `% of Group` calculation must still use the actual total group income for that business type.
-2. **Business type has zero income records:** When `GET /api/metrics/categories/top` returns an empty array for a specific business type (e.g. B2C has no income in the selected date range), the corresponding panel shows the empty state message: "No income data for {businessType}." The other panel renders normally with its data.
+2. **Business type has zero income records:** When `GET /api/metrics/categories/top` returns an empty array for a specific business type (e.g. B2C has no income in the selected date range), the corresponding panel shows the empty state message: "No income data for {businessType}." The other panel renders normally with its data. The comparison chart below both panels also shows its own empty state ("No data to display") when both totals are zero.
 3. **Date range affects both panels independently:** The `start_date` and `end_date` parameters are shared between both B2B and B2C requests. If the date range returns data for B2B but not B2C (or vice versa), each panel independently handles its empty state.
 4. **Percentage calculations:** The `% of Group` column divides each category's `total_amount` by the sum of all category amounts returned (which represents the total income for that business type). If no categories exist, no percentage is calculated.
 

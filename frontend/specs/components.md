@@ -90,8 +90,8 @@ A new page/section in the dashboard dedicated to comparing revenue performance b
 | Prop | Type | Required | Description |
 |------|------|----------|-------------|
 | `b2bCategories` | `CategoryEntry[]` | Yes | Top 5 income categories for B2B (from `GET /api/metrics/categories/top?operation_type=income&business_type=B2B`). |
-| `b2cCategories` | `CategoryEntry[]` | Yes | Top 5 income categories for B2C (from `GET /api/metrics/categories/top?operation_type=income&business_type=B2C`). |
-| `loading` | `boolean` | No | Whether data is being fetched. When `true`, skeleton placeholders are shown. Default: `false`. |
+| `b2cCategories` | `CategoryEntry[]` | Yes | Top 5 income categories for B2C (from `GET /api/metrics/categories/top?operation_type=income&business_type=B2C`). || `b2bTotalIncome` | `number` | Yes | Sum of all B2B income (used by the chart and the Top5Table % calculations). |
+| `b2cTotalIncome` | `number` | Yes | Sum of all B2C income (used by the chart and the Top5Table % calculations). || `loading` | `boolean` | No | Whether data is being fetched. When `true`, skeleton placeholders are shown. Default: `false`. |
 
 #### Layout
 
@@ -102,12 +102,14 @@ A new page/section in the dashboard dedicated to comparing revenue performance b
 │  │ Top 5 Table   │  │  │ Top 5 Table   │  │
 │  │ (Top5Table)   │  │  │ (Top5Table)   │  │
 │  └───────────────┘  │  └───────────────┘  │
-│  ┌───────────────┐  │  ┌───────────────┐  │
-│  │ Chart         │  │  │ Chart         │  │
-│  │ (Comparison-  │  │  │ (Comparison-  │  │
-│  │  Chart)       │  │  │  Chart)       │  │
-│  └───────────────┘  │  └───────────────┘  │
 └─────────────────────┴─────────────────────┘
+┌─────────────────────────────────────────────┐
+│          ComparisonChart (B2B vs B2C)        │
+│  ┌─────────────────────────────────────────┐│
+│  │   ██ B2B: $XXX,XXX.XX                   ││
+│  │   ██ B2C: $XXX,XXX.XX                   ││
+│  └─────────────────────────────────────────┘│
+└─────────────────────────────────────────────┘
 ```
 
 ### Component: `Top5Table`
@@ -141,26 +143,27 @@ This message is displayed centered within the panel area.
 
 ### Component: `ComparisonChart`
 
-A chart (e.g. bar chart or pie chart) showing a visual comparison of the income category distribution for a business type.
+A single chart that compares the total income of B2B versus B2C visually. Placed below the two parallel panels, spanning the full width of the view.
 
 #### Props
 
 | Prop | Type | Required | Description |
 |------|------|----------|-------------|
-| `businessType` | `"B2B" \| "B2C"` | Yes | The business type this chart represents. |
-| `categories` | `CategoryEntry[]` | Yes | The category entries to visualize. |
-| `totalGroupIncome` | `number` | Yes | The total income for this business type (used for percentage calculations in the chart). |
+| `b2bTotalIncome` | `number` | Yes | Total income for B2B (sum of all income amounts across B2B categories). |
+| `b2cTotalIncome` | `number` | Yes | Total income for B2C (sum of all income amounts across B2C categories). |
 
 #### Chart Description
 
-- The chart visualises how income is distributed across the top categories for that business line.
-- **X-axis / labels:** Category names.
-- **Y-axis / value:** Income amount (or percentage of total).
-- Each data point represents a single category's total income for the given business type.
+- The chart displays exactly **two data points**: B2B total income and B2C total income.
+- Chart type: a side-by-side bar chart or a single horizontal bar with two segments is recommended.
+- **X-axis / legend labels:** "B2B" and "B2C".
+- **Y-axis / value:** Total income amount in currency.
+- Each bar/segment represents the **aggregate total income** for that business line (not per-category breakdown).
+- An optional label above or beside each bar shows the exact dollar amount.
 
 #### Empty State
 
-When `categories` is empty, the chart area shows:
+When both totals are zero (or when both top-5 lists are empty), the chart area shows:
 
 > **No data to display**
 
